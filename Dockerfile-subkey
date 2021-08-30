@@ -1,0 +1,14 @@
+FROM docker.uclv.cu/rust:1.54.0
+
+RUN export HTTP_PROXY="http://192.168.49.1:8282" \
+    && export http_proxy="http://192.168.49.1:8282" \
+    https_proxy="http://192.168.49.1:8282" \    
+    && CARGO_HTTP_TIMEOUT=120 \
+    && HTTP_TIMEOUT=120 \
+    && cargo install --force subkey --git https://github.com/paritytech/substrate --version 2.0.1 --locked
+
+CMD ["subkey", "-h"]
+
+# NOTE - its not necessary to reduce image size because this image will be used as a
+# job in a kubernetes cluster. The goal of this images is to generate the 
+# public/private keys for the node accounts
